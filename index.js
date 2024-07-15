@@ -23,6 +23,8 @@ const PASSWORD = process.env.DB_PASSWORD;
 
 Connection(USERNAME, PASSWORD);
 
+// this this my user name and password
+
 app.listen(PORT, () => {
   console.log(`server is running  on ${PORT} port `);
 });
