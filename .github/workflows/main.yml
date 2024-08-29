@@ -27,11 +27,7 @@ jobs:
 
       - name: Log in to Amazon ECR
         run: |
-          aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.ap-south-1.amazonaws.com
-
-      - name: List ECR repositories (for debugging)
-        run: |
-          aws ecr describe-repositories --region ap-south-1
+          aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 767397664253.dkr.ecr.ap-south-1.amazonaws.com
 
       - name: Build Docker image
         run: |
@@ -39,8 +35,8 @@ jobs:
 
       - name: Tag Docker image for ECR
         run: |
-          docker tag flipkart-image:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.ap-south-1.amazonaws.com/flipkart-image:latest
+          docker tag flipkart-image:latest 767397664253.dkr.ecr.ap-south-1.amazonaws.com/flipkart-image:latest
 
       - name: Push Docker image to ECR
         run: |
-          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.ap-south-1.amazonaws.com/flipkart-image:latest
+          docker push 767397664253.dkr.ecr.ap-south-1.amazonaws.com/flipkart-image:latest
