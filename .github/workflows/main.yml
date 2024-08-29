@@ -39,8 +39,4 @@ jobs:
 
       - name: Push Docker image to ECR
         run: |
-          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.ap-south-1.amazonaws.com/flipkart-image:latest
-
-      - name: Pull Docker image from ECR
-        run: |
-          docker pull ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.ap-south-1.amazonaws.com/flipkart-image:latest
+           docker push 767397664253.dkr.ecr.ap-south-1.amazonaws.com/flipkart-image:latest
