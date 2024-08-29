@@ -9,6 +9,10 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
 
+    env:
+      ECR_REPOSITORY: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.ap-south-1.amazonaws.com/flipkart-image
+      IMAGE_TAG: latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -27,20 +31,19 @@ jobs:
 
       - name: Log in to Amazon ECR
         run: |
-          aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.ap-south-1.amazonaws.com
+          aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin ${{ env.ECR_REPOSITORY }}
 
       - name: Build Docker image
         run: |
-          docker build -t flipkart-image:latest .
+          docker build -t flipkart-image:${{ env.IMAGE_TAG }} .
 
       - name: Tag Docker image for ECR
         run: |
-          docker tag flipkart-image:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.ap-south-1.amazonaws.com/flipkart-image:latest
+          docker tag flipkart-image:${{ env.IMAGE_TAG }} ${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}
 
       - name: Push Docker image to ECR
         run: |
-          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.ap-south-1.amazonaws.com/flipkart-image:latest
+          docker push ${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}
 
-      - name: Pull Docker image from ECR
         run: |
           docker pull ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.ap-south-1.amazonaws.com/flipkart-image:latest
