@@ -1,0 +1,41 @@
+name: CI/CD for Node.js with Docker on ECR
+
+on:
+ 
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install Docker using official script
+        run: |
+          curl -fsSL https://get.docker.com -o get-docker.sh
+          sudo sh get-docker.sh
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v3
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-south-1
+
+      - name: Log in to Amazon ECR
+        run: |
+          aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 767397664253.dkr.ecr.ap-south-1.amazonaws.com
+
+      - name: Build Docker image
+        run: |
+          docker build -t flipkart-image .
+
+      - name: Tag Docker image for ECR
+        run: |
+          docker tag flipkart-image:latest 767397664253.dkr.ecr.ap-south-1.amazonaws.com/flipkart-image:latest
+
+      - name: Push Docker image to ECR
+        run: |
+          docker push 767397664253.dkr.ecr.ap-south-1.amazonaws.com/flipkart-image:latest
